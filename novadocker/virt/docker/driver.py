@@ -443,7 +443,7 @@ class DockerDriver(driver.ComputeDriver):
     def _start_container(self, container_id, instance, network_info=None):
         binds = self._get_key_binds(container_id, instance)
         dns = self._extract_dns_entries(network_info)
-        self.docker.start(container_id,  dns=dns)
+        self.docker.start(container_id)
         #self.docker.start(container_id, binds=binds, dns=dns,
         #                  privileged=CONF.docker.privileged)
 
