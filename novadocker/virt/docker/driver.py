@@ -94,7 +94,7 @@ docker_opts = [
                     'specified, docker will try to load the image from '
                     'the shared directory by image ID.'),
     cfg.BoolOpt('privileged',
-                default=False,
+                default=True,
                 help='Set true can own all root privileges in a container.'),
 ]
 
@@ -443,7 +443,7 @@ class DockerDriver(driver.ComputeDriver):
     def _start_container(self, container_id, instance, network_info=None):
         binds = self._get_key_binds(container_id, instance)
         dns = self._extract_dns_entries(network_info)
-        self.docker.start(container_id)
+        self.docker.start(container_id,privileged=CONF.docker.privileged)
         #self.docker.start(container_id, binds=binds, dns=dns,
         #                  privileged=CONF.docker.privileged)
 
@@ -591,7 +591,9 @@ class DockerDriver(driver.ComputeDriver):
 
         binds = self._get_key_binds(container_id, instance)
         dns = self._extract_dns_entries(network_info)
-        self.docker.start(container_id, binds=binds, dns=dns)
+        self.docker.start(container_id, binds=binds, dns=dns,
+                           privileged=CONF.docker.privileged)
+        #self.docker.start(container_id,privileged=CONF.docker.privileged)
         try:
             if network_info:
                 self.plug_vifs(instance, network_info)
@@ -608,7 +610,9 @@ class DockerDriver(driver.ComputeDriver):
             return
         binds = self._get_key_binds(container_id, instance)
         dns = self._extract_dns_entries(network_info)
-        self.docker.start(container_id, binds=binds, dns=dns)
+        self.docker.start(container_id, binds=binds, dns=dns,
+                           privileged=CONF.docker.privileged)
+        #self.docker.start(container_id,privileged=CONF.docker.privileged)
         if not network_info:
             return
         try:
